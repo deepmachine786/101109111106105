@@ -1,5 +1,5 @@
-from hashlib import new
-from traceback import format_tb
+from functools import wraps
+
 import requests 
 import os
 import bs4
@@ -20,40 +20,33 @@ print(len(count_images))
 
 # with open(".//Apple/lists.py", "w") as files:
 #     files.write(count_images)
-def find_url_images(images_lists: list): # this function is which imagrs has contains data-src with string link ...
+
+def download_images(function):
+    @wraps(function)
+    def wrapper_function(*args):
+        new_lists = function(*args) # calling the function ..
+        for images in range(len(new_lists)):
+            # check if the image sis endswith .png then downnload continue ..
+            extension = new_lists[images]
+            if extension is None:
+                continue
+            else : extension = '.png'
+            filename = str(images)+extension # get the file name t save the file ...
+            get_images_dow = requests.get(new_lists[images], stream=True)
+            with open(os.getcwd()+"\\Apple\\"+filename, "wb") as files:
+                shutil.copyfileobj(get_images_dow.raw,files)
+        else: speak(" All file are Suceffuly Downloaded ")   
+    return wrapper_function
+@download_images
+def find_url_images(images_lists: set): # this function is which imagrs has contains data-src with string link ...
     new_lists = [] 
     for i in images_lists:
-        new_lists.append(i.get('data-src'))
+        new_lists.append(i.get('data-src'.strip()))
    
     return new_lists
 
 
 
-def download_images(images_lists:set, folder_name:str): # this function which data has src string in inspect ...
-    j = 1493 # fiile name .. starting ..
-    for images in images_lists: # find and link of each src in string ... ad save in the new_lists 
-        new_lists = images.get('data-src') # append ech src file link ..
-
-        # get the src link extenstion 
-        extension = new_lists[new_lists.rindex('.'): ] # or we can use new_lists[new_lists.rindex(new_lists.find('.)): ]
-        if extension.startswith('.png'):
-            extension = '.png' # chack the extension and save
-        elif extension is None:
-            images_list.remove(extension)
-            continue
-        else: continue # if Extension no png then save another
-        filename = str(j)+extension # example 1.png , 2.png ....
-        res = requests.get(new_lists, stream=True)
-        try:
-            with open(folder_name+filename, "wb") as files:
-                shutil.copyfileobj(res.raw, files)
-        except Exception as e:
-            print(e)
-        j = j+1
-    else: speak("Succefully Save all the images ...")
-    return None
-
-
-
-download_images(set(count_images), os.getcwd()+"\\Apple\\")
+# download_images(set(count_images), os.getcwd()+"\\Apple\\")
+find_url_images(count_images)
 # print(" List if Url is : ")
