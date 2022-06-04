@@ -30,7 +30,7 @@ def find_url_images(images_lists: list): # this function is which imagrs has con
 
 
 def download_images(images_lists:set, folder_name:str): # this function which data has src string in inspect ...
-    j = 441 # fiile name .. starting ..
+    j = 1493 # fiile name .. starting ..
     for images in images_lists: # find and link of each src in string ... ad save in the new_lists 
         new_lists = images.get('data-src') # append ech src file link ..
 
@@ -38,6 +38,9 @@ def download_images(images_lists:set, folder_name:str): # this function which da
         extension = new_lists[new_lists.rindex('.'): ] # or we can use new_lists[new_lists.rindex(new_lists.find('.)): ]
         if extension.startswith('.png'):
             extension = '.png' # chack the extension and save
+        elif extension is None:
+            images_list.remove(extension)
+            continue
         else: continue # if Extension no png then save another
         filename = str(j)+extension # example 1.png , 2.png ....
         res = requests.get(new_lists, stream=True)
