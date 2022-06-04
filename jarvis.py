@@ -1,6 +1,7 @@
 from datetime import date
 from functools import partial
 import speech_recognition as speech 
+import os 
 
 import pyttsx3
 
@@ -15,12 +16,13 @@ def speak(audio):
 
 def speak_corotuine(function):
     
-    def speak_er():
+    def speak_er(argument):
         while True:
             getting = (yield);
 
-            if getting not in function(getting):
-                speak(" Sorry Sir! I have not Train to Advance")
+            if getting == argument:
+                function(argument) # send the command to works ..
+                # speak(" Sorry Sir! I have not Train to Advance")
             else: continue
     return speak_er
 
@@ -37,7 +39,7 @@ def matching(argument):
     elif argument == " What is your project Name".strip().lower():
         speak(" Project Name is ! SmallChat")
     elif argument == "What is the time".strip().lower():
-        speak(date.today().weekday())
+        speak(date.today().weekday())        
 
     else: 
         speak(" Thanking you sir.")
@@ -54,8 +56,7 @@ def take_command():
             print(" Listing ....")
             command.pause_thresold = 1
             # audio = command.listen(source)
-            audio = "what do you"
-
+            audio = input("Enter The Command")
             try:
                 print(" Recognization ....")
                 query = command.recognize_google(audio, language='en-in')
@@ -88,5 +89,14 @@ def take_command():
 if __name__ == "__main__":
     speak(" System Loading , Please Wait ....")
     speak(" System Loaded Sucessfully ! Hello Sir")
-    take_command()
+    # take_command()
+    audio = input("Enter The Command:- ")
+    print(os.getcwd()+"\\Apple\\")
+    speaks = speak_corotuine(matching)
+    starts = speaks(audio)
+    starts.__next__()
+    starts.send(audio)
+    starts.close()
+    
+    
 

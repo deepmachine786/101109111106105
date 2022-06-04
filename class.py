@@ -698,43 +698,49 @@ type method and in the type method if
 # Q.. class And Instance Attribute in pythom
 
 ''' class Attribiute of object is shared the object to each othe when there instanbce 
-object is not shared the object copy , it share the copy of every object '''
+# object is not shared the object copy , it share the copy of every object '''
 
-class Name:
-    count = 0  # class Attribute 
+# class Name:
+#     count = 0  # class Attribute 
 
-    def increase(self):
-        Name.count +=1 
+#     def increase(self):
+#         Name.count +=1 
     
 
-obj = Name()
-obj.increase()
-print(obj.count) # print 1
-obj.increase()
-print(obj.count) # print 2 
+# obj = Name()
+# obj.increase()
+# print(obj.count) # print 1
+# obj.increase()
+# print(obj.count) # print 2 
 
 
 
-class Instance:
-    def __init__(self) -> None:
-        self.name = "xyz"
-        self.salary = 4000 
+# class Instance:
+#     def __init__(self) -> None:
+#         self.name = "xyz"
+#         self.salary = 4000 
     
-    def show(self):
-        print(self.name, self.salary)
+#     def show(self):
+#         print(self.name, self.salary)
 
-# var()  method return the attriute in the dictionary 
-# dir() method return teg directory of the object 
+# # var()  method return the attriute in the dictionary 
+# # dir() method return teg directory of the object 
 
-def print_obj(objects:object):
-    objects.show()
+# def print_obj(objects:object):
+#     objects.show()
 
-obj2 = Instance()
-print_obj(obj2)
+# obj2 = Instance()
+# print_obj(obj2)
 
-print(" Dictionary is :- ", vars(obj2))
-print(dir(obj2))
-        
+# print(" Dictionary is :- ", vars(obj2))
+# print(dir(obj2))
+# if callable(obj2.show):
+#     obj2.show()
+# else: print("Function is Not callable ") # return the true if the function is callable ...
+
+
+
+
 
 
 

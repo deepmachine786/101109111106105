@@ -1,10 +1,15 @@
+import os 
 
-import streamlit as st
-from PIL import Image
 
-st.title(" Welcome to My Smallchat Application ".lstrip().upper())
-images = Image.open("./app_icon.png")
-
-st.image(images)
-st.button("click Here", " Welcome Here ")
-
+# create a all folder to get acces or store all images in the current _folder ..
+def create_directory(lists: list):
+    try:
+        for i in lists:
+            if i not in os.getcwd():
+                os.mkdir(i)
+            else: 
+                print(" folder is already created ..")
+                continue
+    except Exception as e:
+        print(" Unsuccefully Created Folder ..", e)
+        exit(0) # if t he eror is occured then it is exit ..
