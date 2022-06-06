@@ -32,10 +32,10 @@ def download_images(function):
             else : extension = '.png'
             filename = str(images)+extension # get the file name t save the file ...
             get_images_dow = requests.get(new_lists[images], stream=True)
-            with open(os.getcwd()+"\\Apple\\"+filename, "wb") as files:
+            with open(os.getcwd()+"\\emojidex\\"+filename, "wb") as files:
                 shutil.copyfileobj(get_images_dow.raw,files)
         else: speak(" All file are Suceffuly Downloaded ")   
-    return wrapper_function 
+    return wrapper_function
 @download_images
 def find_url_images(images_lists: set): # this function is which imagrs has contains data-src with string link ...
     new_lists = [] 

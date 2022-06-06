@@ -1,3 +1,4 @@
+import sys
 from textwrap import wrap
 import time 
 import datetime as dt
@@ -5,6 +6,7 @@ import os
 from itertools import zip_longest
 import asyncio 
 from functools import  wraps
+import subprocess # to call th eprocess ...
 
 import pyttsx3
 
@@ -13,6 +15,7 @@ morning_time = [i for i in range(1,13)] # for morning time
 evening_time = [i for i in range(13,25)] # for night time ..
 
 all_time = dict(zip_longest(morning_time, evening_time))
+all_time[12] = 00 
 
 hours =minutes=second = 0
 
@@ -44,16 +47,16 @@ def get_time_execute(function):
             ''' from hour is starting hour and from_second is the starting second and to_hour 
             ending the Task ..'''
             start_task = True # This is for Looping ..
-            while start_task:
+            while start_task == True:
                 local_hours , local_second = int(wrap(time.ctime(),10)[1][0:2]), int(wrap(time.ctime(),10)[1][3:5]) # get the current 
                     # local time and second ..
-                print(local_hours, local_second," and ", from_hours, from_second," to ",to_hours, to_second)
-                if (local_hours>from_hours) and (local_hours>=to_hours and local_second>=to_second):
+                print(local_hours, local_second," and ", from_hours, from_second," to ",to_hours, to_second, time.ctime())
+                if (local_hours>=from_hours) and (local_hours>=to_hours and local_second>=to_second):
                     engine(" Your Task is Completed ... Next Task is Running ..")
                     start_task = False# return 0 #execute the code when the time is Over ..
                 if (local_hours== from_hours and local_second>=from_second) and (local_hours<=to_hours and local_second<=to_second):
-                    await asyncio.sleep(get_total_second//2)
                     engine(" Your Have Completed Your Task in Few Minutes! Please Complete Your Task ! After Time Completing.")
+                    await asyncio.sleep(get_total_second//(from_second+to_second)-10)
                 else: 
                     await asyncio.sleep(3600*(from_hours-local_hours))
         except Exception as e: 
@@ -69,7 +72,7 @@ def execute_task(key:str,value:str) -> tuple:
 
     # key is task and value is the time to execute the task 
     from_hours, to_hour = value.split("to") # example hours = 9pm ans second = 10 pm 
-    current_time= time.ctime() # get the currentt time ..
+    # current_time= time.ctime() # get the currentt time ..
     copy_hours ,copy_to_hour = from_hours, to_hour # for checking if time is am or pm 
     print(f" Hours is :- {from_hours} and Second is {to_hour}")
     # now hours = 09:30 am ans second = 10:00 pm 
@@ -79,9 +82,21 @@ def execute_task(key:str,value:str) -> tuple:
 
     from_hours = from_hours.strip().split(":")[0]
     to_hour = to_hour.strip().split(":")[0]
-    if "pm" in copy_hours and "pm" in copy_to_hour:
-        from_hours = all_time.get(int(from_hours), from_hours) # if the time in th ekey thenrretunr the value 
-        to_hour = all_time.get(int(to_hour), to_hour) # if the time in key then return the value ...
+    if ("am" in copy_hours and int(from_hours)==12 ):
+        from_hours = all_time.get(int(from_hours), from_hours)
+    elif ("pm" in copy_to_hour and int(to_hour)==12):
+        to_hour = 12
+    elif ("am" in copy_hours and "pm" in copy_to_hour ):
+        from_hours = from_hours
+        to_hour = all_time.get(int(to_hour), to_hour)
+        ...
+    elif ("pm" in copy_hours and "am" in copy_to_hour):
+        from_hours = all_time.get(int(from_hours), from_hours)
+        to_hour = to_hour
+    else:
+        if "pm" in copy_hours and "pm" in copy_to_hour:
+            from_hours = all_time.get(int(from_hours), from_hours) # if the time in th ekey thenrretunr the value 
+            to_hour = all_time.get(int(to_hour), to_hour) # if the time in key then return the value ...
 
     print(" second is ",from_second, " and other second is :- ", to_second)
     print(" first hour is :- ",from_hours," and second hour is :- ",to_hour)
@@ -103,6 +118,33 @@ async def print_data(newdict:dict): # print the data
         # execute_task(key,value)
         number+=1
     engine(" Your Task Fully Completed Today ! Good Bye!")
+    engine(" If You Want ! To Update  or Changed Time ! Table In File! Then Exit This  Command  And Again Run This Script ! Then Your ! Running Perfectly.BY ")
+    
+
+                
+
+
+# def read_setup_file() -> list:
+#     with open(os.getcwd()+"\\"+"todo.py", "r+") as file_read:
+#         return file_read.readlines()
+        
+
+# def write_setup_file():
+#     path = "C:\\Users\\user\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\"
+#     with open(path+"Running_To_Do.py", "w+") as files:
+#            for i in read_setup_file():
+#                files.write(i)
+#     # and store the file in the ..
+#     with open(os.getcwd()+"\\"+"plan.txt", "r+") as file_read:
+#         with open(path+"plan.txt", "w+") as files:
+#             files.write(file_read.readline()+"\n")
+    
+    # with open(path+"message.bat", "w+") as files:
+    #     files.write("""
+    #     @echo off
+    #     msg * You have Complete Full Task Today . Good Bye!
+    #     exit    
+    #     """)
 
 
 
@@ -112,7 +154,7 @@ def read_data(): # read the data from file
     with open(os.getcwd()+"\\"+"plan.txt", "r+") as files:
         for i in files.readlines():
             lists = i.split(":-") # return e data in list whose is in the file ..
-            newdict[lists[0]] = lists[1].replace("\n","")
+            newdict[lists[0]] = lists[1]
     # print_data(newdict) # print the data in the command line 
     asyncio.run(print_data(newdict)) # call the function to execute the task one by one ..
 
@@ -123,8 +165,10 @@ def write_data(data:dict): # write the data from user and Store in the file ..
             for key,value in data.items():
                 files.writelines(f"{key} :- {value} \n")
         engine(" File Writen Successfully")
+        # write_setup_file()
     except Exception as e:
         print(" File Writing UnSucessfully ",e)
+         # write the file in statup window ...
         exit(0)
 
 
