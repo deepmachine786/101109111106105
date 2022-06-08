@@ -32,8 +32,8 @@ def get_information_from_user():
     task_lists = {}
     for i in range(int(number_information)):
         task = input(f"Enter Your {i+1} Task:- ")
-        task_time = input(" Enter Your Time start From( Eg: 9:00 pm):-  ")
-        task_end_time = input("Enter Your End Time (Eg 10:00 pm):- ")
+        task_time = input(" Enter Your Time to start From( Eg: 9:00 pm):-  ")
+        task_end_time = input("Enter Your End Time to end Task (Eg 10:00 pm):- ")
         task_lists[task] = task_time.lower()+" to "+task_end_time.lower()
     return task_lists # return the task list and save in the file ..
 
@@ -210,7 +210,7 @@ def print_data(newdict:dict): # print the data
 
 def read_data(): # read the data from file
     try:
-        engine(" Please Check Your File. Your Problem start from line number 135 Please Check and Run Ok . You have Already Save your Task..")
+        engine(" Please Check Your File. . You have Already Save your Task..")
         with open(os.getcwd()+"\\"+"plan.txt", "r+") as files:
                 for i in files.readlines():
                     if i.strip() is None or i.strip() =="":
