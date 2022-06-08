@@ -1,1 +1,3 @@
-python :- 8:00 pm  to 9:00 pm 
+python :- 10:00 am  to 11:00 am
+data :- 9:00 pm  to 12:00 pm 
+swift_programming :- 11:0 am to 11:15 am

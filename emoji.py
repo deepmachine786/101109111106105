@@ -24,7 +24,7 @@ def download_images(function):
     @wraps(function)
     def wrapper_function(*args):
         new_lists = function(*args) # calling the function ..
-        for images in range(len(new_lists)): 
+        for images in range(1538,len(new_lists)+1):  
             # check if the image sis endswith .png then downnload continue ..
             extension = new_lists[images]
             if extension is None:

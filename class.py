@@ -14,6 +14,9 @@
 
 
 
+from pkg_resources import empty_provider
+
+
 class Dog:
     pass 
 
@@ -738,13 +741,26 @@ type method and in the type method if
 #     obj2.show()
 # else: print("Function is Not callable ") # return the true if the function is callable ...
 
+# def reverseddddd(sequence):
+#     sequence_type = type(sequence)
+#     print(sequence_type)
+#     empty_sequence = sequence_type()
+#     print(empty_sequence)
 
+#     if sequence == empty_sequence:
+#         return empty_sequence
 
+#     rest = reverseddddd(sequence[2:])
+#     print("here is :- ",rest)
+#     final = sequence[0:1]
+#     print("second is :- ",final)
 
+#     final = rest+final
+#     print(final)
+#     return final 
 
-
-
-
+# print(reverseddddd([10,20, 30 ,40]))
+# print(reverseddddd("GeeksforGeeks"))
 
 
 
