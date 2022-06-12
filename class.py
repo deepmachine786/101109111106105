@@ -762,7 +762,11 @@ type method and in the type method if
 # print(reverseddddd([10,20, 30 ,40]))
 # print(reverseddddd("GeeksforGeeks"))
 
+#User function Template for python3
 
-    
+ 
+
+
+
 
 
