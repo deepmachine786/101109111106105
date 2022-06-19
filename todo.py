@@ -28,12 +28,12 @@ newdict = {} # for store the data in dictionary ...
 # this is a only night wake time programming ..
 def get_information_from_user():
     engine(" Please Fill Your Task Information First ")
-    number_information = input(" Enter a Number to Save the Task : ")
+    number_information = input(" Enter a Number to Perform The Task :-  ")
     task_lists = {}
     for i in range(int(number_information)):
         task = input(f"Enter Your {i+1} Task:- ")
-        task_time = input(" Enter Your Time start From( Eg: 9:00 pm):-  ")
-        task_end_time = input("Enter Your End Time (Eg 10:00 pm):- ")
+        task_time = input(" Enter Your Time to start From( Eg: 9:00 pm):-  ")
+        task_end_time = input("Enter Your End Time to end Task (Eg 10:00 pm):- ")
         task_lists[task] = task_time.lower()+" to "+task_end_time.lower()
     return task_lists # return the task list and save in the file ..
 
@@ -88,7 +88,7 @@ def execute_task(key:str,value:str) -> tuple:
         to_hour = 12
     elif ("am" in copy_hours and "pm" in copy_to_hour ):
         from_hours = from_hours
-        to_hour = all_time.get(int(to_hour), to_hour)
+        to_hour = all_time.get(int(to_hour), to_hour)    
         ...
     elif ("pm" in copy_hours and "am" in copy_to_hour):
         from_hours = all_time.get(int(from_hours), from_hours)
@@ -107,22 +107,81 @@ def execute_task(key:str,value:str) -> tuple:
     return total_time_second,int(from_hours),int(to_hour),from_second, to_second
 
 
+def get_routine_time_mor(function): 
+    @wraps(function)
+    async def wrapper_function(*args, **kwargs):
+        new_dict = function(*args, **kwargs)
+        number = 1
+        for key,value in new_dict.items():
+            
+            engine(f" Your {number} Task of {key} is Start . Now You Start Now")
+            print(f" Your {number} Task of {key} is Start. Now You Start Now ")
+            # print(newdict) # print the data in the newdict
+            await asyncio.gather(execute_task(key,value)) # wait and exexute one by one task in the file ...
+            # execute_task(key,value)
+            number+=1
+        engine(" Your Task Fully Completed Today ! Good Bye!")
+        engine(" If You Want ! To Update  or Changed Time ! Table In File! Then Exit This  Command  And Again Run This Script ! Then Your ! Running Perfectly.BY ")
+    return wrapper_function
 
-# print the data in file and Passing in the function to Execute tha task ....
-async def print_data(newdict:dict): # print the data 
-    number =1 
+@get_routine_time_mor
+def check_Day_mor(newdict:dict) -> dict: 
+    newdict_org = {}
+
     for key,value in newdict.items():
-        engine(f" Your {number} Task of {key} is Start . Now You Start Now")
-        # print(newdict) # print the data in the newdict 
-        await asyncio.gather(execute_task(key,value)) # wait and exexute one by one task in the file ...
-        # execute_task(key,value)
-        number+=1
-    engine(" Your Task Fully Completed Today ! Good Bye!")
-    engine(" If You Want ! To Update  or Changed Time ! Table In File! Then Exit This  Command  And Again Run This Script ! Then Your ! Running Perfectly.BY ")
+        if "am" in value and "pm" in value :
+            newdict_org[key] = newdict_org.get(key, value) # if the key is found then retun else return value ..
+        elif "am" in value :
+             newdict_org[key] = newdict_org.get(key, value) # if the key is found then retun else return value ..
+        else: continue
+    return newdict_org
+
+def get_routine_time_eve(function):
+    @wraps(function) # not the change of the doc of thies functin ..
+    async def wrapper_function(*args, **kwargs):
+        new_dict = function(*args, **kwargs)
+        number =1 
+        for key,value in new_dict.items():
+            
+            engine(f" Your {number} Task of {key} is Start . Now You Start Now")
+            print(f" Your {number} Task of {key} is Start. Now You Start Now ")
+            # print(newdict) # print the data in the newdict
+            await asyncio.gather(execute_task(key,value)) # wait and exexute one by one task in the file ...
+            # execute_task(key,value)
+            number+=1
+        engine(" Your Task Fully Completed Today ! Good Bye!")
+        engine(" If You Want ! To Update  or Changed Time ! Table In File! Then Exit This  Command  And Again Run This Script ! Then Your ! Running Perfectly.BY ")
+    return wrapper_function
+
+
+
+@get_routine_time_eve
+def check_Day_eve(newdict:dict) -> dict:
+    newdict_eve = {}
+    for key ,value in newdict.items():
+        if "pm" in value and "am" in value :
+            newdict_eve[key] = newdict_eve.get(key, value)
+        elif "pm" in value:
+            newdict_eve[key] = newdict_eve.get(key, value)
+        else: continue
+    return newdict_eve
+
     
 
-                
 
+# print the data in file and Passing in the function to Execute tha task ....
+def print_data(newdict:dict): # print the data 
+    # number =1 
+    current_time_now= int(wrap(time.ctime(),10)[1][0:2])
+    if (current_time_now<=12):
+        engine(" Good Morning....")
+        asyncio.run(check_Day_mor(newdict))
+        exit(0)
+
+    else: 
+        engine(" Good Evening Sir.")
+        asyncio.run(check_Day_eve(newdict))
+        exit(0)
 
 # def read_setup_file() -> list:
 #     with open(os.getcwd()+"\\"+"todo.py", "r+") as file_read:
@@ -149,22 +208,33 @@ async def print_data(newdict:dict): # print the data
 
 
 
-def read_data(): # read the data from file 
-    engine(" Please Check Your File. . You have Already Save your Task..")
-    with open(os.getcwd()+"\\"+"plan.txt", "r+") as files:
-        for i in files.readlines():
-            lists = i.split(":-") # return e data in list whose is in the file ..
-            newdict[lists[0]] = lists[1]
-    # print_data(newdict) # print the data in the command line 
-    asyncio.run(print_data(newdict)) # call the function to execute the task one by one ..
+def read_data(): # read the data from file
+    try:
+        engine(" Please Check Your File. . You have Already Save your Task..")
+        with open(os.getcwd()+"\\"+"plan.txt", "r+") as files:
+                for i in files.readlines():
+                    if i.strip() is None or i.strip() =="":
+                        engine(" Space Found in Your File , Please Remove ..")
+                        continue
+                    else:
+                        lists =i.split(":-")  # return e data in list whose is in the file ..
+                        newdict[lists[0].strip()] = lists[1].strip() 
+        print(newdict.items())
+        print_data(newdict)
+        # asyncio.run(print_data(newdict)) # call the function to execute the task one by one ..        # print_data(newdict) # print the data in the command line
+    except Exception as e:
+        engine(" Please Remove Space After The End Line of Task ! Please Then Run Again Scipt! OK Bye.")
+        print(e)   
+        exit(0)  
+    
 
 
 def write_data(data:dict): # write the data from user and Store in the file ..
     try:
         with open(os.getcwd()+"\\"+"plan.txt", "w+") as files:
             for key,value in data.items():
-                files.writelines(f"{key} :- {value} \n")
-        engine(" File Writen Successfully")
+                files.writelines(f"{key.strip()} :- {value.strip()} \n")
+        engine(" File Writen Successfully! . Now You Run This Script Again Then Your Task is Start .! Ok By")   
         # write_setup_file()
     except Exception as e:
         print(" File Writing UnSucessfully ",e)

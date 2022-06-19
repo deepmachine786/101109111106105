@@ -1,1 +1,5 @@
-python :- 8:00 pm  to 9:00 pm 
+python programming :- 06:00 pm  to 07:00 pm 
+Data Structure :- 07:00 pm to 09:00 pm 
+Swift Programming :- 09:00 pm  to 10:00 pm 
+System Design :- 10:00 pm  to 11:00 pm 
+Operating System :- 06:00 am  to 08:00 am 
